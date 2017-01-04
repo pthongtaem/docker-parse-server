@@ -187,10 +187,12 @@ parse-server:
     GCM_ID: $GCM_ID
     GCM_KEY: $GCM_KEY
     PRODUCTION_PFX: $PRODUCTION_PFX
+    PRODUCTION_PASSPHRASE: $PRODUCTION_PASSPHRASE
     PRODUCTION_BUNDLE_ID: $PRODUCTION_BUNDLE_ID
     PRODUCTION_CERT: $PRODUCTION_CERT # prodCert.pem
     PRODUCTION_KEY: $PRODUCTION_KEY # prodKey.pem
     DEV_PFX: $DEV_PFX
+    DEV_PASSPHRASE: $DEV_PASSPHRASE
     DEV_BUNDLE_ID: $DEV_BUNDLE_ID
     DEV_CERT: $DEV_CERT # devCert.pem
     DEV_KEY: $DEV_KEY # devKey.pem
@@ -229,6 +231,35 @@ parse-cloud-code:
 ## How to import ssh-key from github
 ```sh
 $ curl https://github.com/yongjhih.keys | docker exec -i parse-server ssh-add-key
+```
+
+## MongoDB alternatives
+
+* ParseServer-1.x verfied Mongo 3.0.8
+* ParseServer-2.x verfied Mongo 3.0.8, 3.2.6
+
+```yml
+image: mongo:3.2.6
+```
+
+### MongoDB + RocksDB
+
+Parse.com perfers Percona binrary of mongo-rocks:
+
+```yml
+image: yongjhih/mongo-rocks:percona-3.0.8
+```
+
+MongoDB + RocksDB source build:
+
+```yml
+image: yongjhih/mongo-rocks:3.2.0
+```
+
+Avoid ubuntu-12.04 core dump:
+
+```yml
+image: yongjhih/mongo-rocks:ubuntu-12.04-3.2.0
 ```
 
 # Getting Started With Cloud Services

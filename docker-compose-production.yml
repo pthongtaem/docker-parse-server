@@ -21,10 +21,12 @@ parse-server:
     GCM_ID: $GCM_ID
     GCM_KEY: $GCM_KEY
     PRODUCTION_PFX: $PRODUCTION_PFX
+    PRODUCTION_PASSPHRASE: $PRODUCTION_PASSPHRASE
     PRODUCTION_BUNDLE_ID: $PRODUCTION_BUNDLE_ID
     PRODUCTION_CERT: $PRODUCTION_CERT # prodCert.pem
     PRODUCTION_KEY: $PRODUCTION_KEY # prodKey.pem
     DEV_PFX: $DEV_PFX
+    DEV_PASSPHRASE: $DEV_PASSPHRASE
     DEV_BUNDLE_ID: $DEV_BUNDLE_ID
     DEV_CERT: $DEV_CERT # devCert.pem
     DEV_KEY: $DEV_KEY # devKey.pem
@@ -58,6 +60,8 @@ parse-server:
     AZURE_CONTAINER:  $AZURE_CONTAINER
     AZURE_ACCESS_KEY: $AZURE_ACCESS_KEY
     AZURE_DIRECT:     $AZURE_DIRECT
+    GRAPHQL_SUPPORT:  $GRAPHQL_SUPPORT
+    GRAPHQL_SCHEMA:   $GRAPHQL_SCHEMA
   links:
     - mongo
   volumes_from:
@@ -101,7 +105,7 @@ mongo-data:
   command: "--break-mongo"
 
 parse-dashboard:
-  image: yongjhih/parse-dashboard:1.0.10
+  image: yongjhih/parse-dashboard:1.0.18
   links:
     - parse-server
   environment:

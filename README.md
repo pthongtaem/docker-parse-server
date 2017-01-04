@@ -12,7 +12,6 @@
 [![Deploy to AWS](https://d0.awsstatic.com/product-marketing/Elastic%20Beanstalk/deploy-to-aws.png)](https://console.aws.amazon.com/elasticbeanstalk/home?region=us-west-2#/newApplication?applicationName=ParseServer&solutionStackName=Node.js&tierName=WebServer&sourceBundleUrl=https%3A%2F%2Fs3.amazonaws.com%2Felasticbeanstalk-samples-us-east-1%2Feb-parse-server-sample%2Fparse-server-example.zip)
 [![Deploy to Scalingo](https://cdn.scalingo.com/deploy/button.svg)](https://my.scalingo.com/deploy)
 [![Deploy to Docker Cloud](https://github.com/yongjhih/docker-parse-server/raw/master/art/deploy-to-docker-cloud.png)](https://cloud.docker.com/stack/deploy/?repo=https://github.com/yongjhih/docker-parse-server)
-[![Deploy to Tutum](https://s.tutum.co/deploy-to-tutum.svg)](https://dashboard.tutum.co/stack/deploy/?repo=https://github.com/yongjhih/docker-parse-server)
 
 ## :star: Features
 - [x] Parse Server with MongoDB
@@ -24,6 +23,7 @@
 - [x] Deploy with Docker
 - [x] Deploy with Docker Compose
 - [x] Deploy with one click
+- [x] GraphQL support `GRAPHQL_SUPPORT=true`, `GRAPHQL_SCHEMA=YOUR_SCHEMA_URL` (default to `./cloud/graphql/schema.js`)
 
 ## :tv: Overview
 ![Parse Server Diagram](https://github.com/yongjhih/docker-parse-server/raw/master/art/parse-server-diagram.png)
@@ -32,6 +32,10 @@
 [![Screencast](https://github.com/yongjhih/docker-parse-server/raw/master/art/docker-parse-server.gif)](https://youtu.be/1bYWSPEZL2g)
 
 ## :rocket: Deployments
+
+> #### Note
+* If you are upgrading from version below 2.3.0, please see [these recommended steps](https://github.com/ParsePlatform/parse-server/blob/master/2.3.0.md).
+
 ### :paperclip: Deploy with Docker
 ```sh
 $ docker run -d -p 27017:27017 --name mongo mongo
@@ -207,6 +211,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 }
 ```
+
+### :paperclip: GraphQL
+Run with GraphQL support.
+```shell
+GRAPHQL_SUPPORT=true APP_ID=YOUR_APP_ID MASTER_KEY=YOUR_MASTER_KEY SERVER_URL=http://localhost:1337/parse docker-compose up -d
+```
+> Make sure `./cloud/graphql/schema.js` is pushed to cloud code.  
+> Then navigate to [http://localhost:1337/graphql?query=%7B%0A%20%20hello%0A%7D%0A](http://localhost:1337/graphql?query=%7B%0A%20%20hello%0A%7D%0A)  
+
+![](./art/graphql.png)
+
 ## :eyes: See Also
 * https://github.com/ParsePlatform/parse-server
 * http://blog.parse.com/announcements/introducing-parse-server-and-the-database-migration-tool/
@@ -225,7 +240,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 [![gerhardsletten](https://github.com/gerhardsletten.png?size=40)](https://github.com/gerhardsletten)
 [![acinader](https://github.com/acinader.png?size=40)](https://github.com/acinader)
 [![kandelvijaya](https://github.com/kandelvijaya.png?size=40)](https://github.com/kandelvijaya)
-[![mjdev](https://github.com/mjdev.png?size=40)](https://github.com/mjdev)
+[<img src="https://github.com/mjdev.png?size=40" data-canonical-src="https://github.com/mjdev.png?size=40" width="40" height="40"/>](https://github.com/mjdev)
 [![vitaminwater](https://github.com/vitaminwater.png?size=40)](https://github.com/vitaminwater)
 [<img src="https://github.com/euklid.png?size=40" data-canonical-src="https://github.com/euklid.png?size=40" width="40" height="40"/>](https://github.com/euklid)
 [<img src="https://github.com/walkerlee.png?size=40" data-canonical-src="https://github.com/walkerlee.png?size=40" width="40" height="40"/>](https://github.com/walkerlee)

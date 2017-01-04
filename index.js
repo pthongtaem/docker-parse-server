@@ -46,12 +46,14 @@ var productionCert = process.env.PRODUCTION_CERT || '/certs/production-pfx-cert.
 productionCert = isFile(productionCert) ? productionCert : null;
 var productionKey = process.env.PRODUCTION_KEY || '/certs/production-pfx-key.pem';
 productionKey = isFile(productionKey) ? productionKey : null;
+var productionPassphrase = process.env.PRODUCTION_PASSPHRASE || null;
 var productionPushConfig;
 if (productionBundleId && (productionPfx || (productionCert && productionKey))) {
     productionPushConfig = {
         pfx: productionPfx,
         cert: productionCert,
         key: productionKey,
+        passphrase: productionPassphrase,
         bundleId: productionBundleId,
         production: true
     };
@@ -65,12 +67,14 @@ var devCert = process.env.DEV_CERT || '/certs/dev-pfx-cert.pem';
 devCert = isFile(devCert) ? devCert : null;
 var devKey = process.env.DEV_KEY || '/certs/dev-pfx-key.pem';
 devKey = isFile(devKey) ? devKey : null;
+var devPassphrase = process.env.DEV_PASSPHRASE || null;
 var devPushConfig;
 if (devBundleId && (devPfx || (devCert && devKey))) { // exsiting files if not null
     devPushConfig = {
         pfx: devPfx,
         cert: devCert,
         key: devKey,
+        passphrase: devPassphrase,
         bundleId: devBundleId,
         production: false
     };
@@ -194,10 +198,16 @@ if(liveQuery) {
     };
 }
 
-
+var databaseOptions = {};
+if (process.env.DATABASE_TIMEOUT) {
+    databaseOptions = {
+        socketTimeoutMS: +(process.env.DATABASE_TIMEOUT)
+    };
+}
 
 var api = new ParseServer({
     databaseURI: databaseUri || 'mongodb://localhost:27017/dev',
+    databaseOptions: databaseOptions,
     cloud: process.env.CLOUD_CODE_MAIN || __dirname + '/cloud/main.js',
 
     appId: process.env.APP_ID || 'myAppId',
@@ -265,4 +275,35 @@ if(liveQuery) {
   app.listen(port, function() {
     console.log('docker-parse-server running on ' + serverURL + ' (:' + port + mountPath + ')');
   });
+}
+
+// GraphQL
+var isSupportGraphQL = process.env.GRAPHQL_SUPPORT;
+var schemaURL = process.env.GRAPHQL_SCHEMA || './cloud/graphql/schema.js';
+
+console.log('isSupportGraphQL :', isSupportGraphQL);
+console.log('schemaURL :', schemaURL);
+
+if(isSupportGraphQL){
+    console.log('Starting GraphQL...');
+    
+    var IS_DEVELOPMENT = process.env.NODE_ENV !== 'production';
+
+    function getSchema() {
+        if (IS_DEVELOPMENT) {
+            delete require.cache[require.resolve(schemaURL)];
+        }
+
+        return require(schemaURL);
+    }
+
+    var graphQLHTTP = require('express-graphql');
+    app.use('/graphql', graphQLHTTP(function(request){ return {
+        graphiql: IS_DEVELOPMENT,
+        pretty: IS_DEVELOPMENT,
+        schema: getSchema()
+    }}));
+
+    // TOHAVE : Support custom `./graphql` path and maybe `port`?
+    isSupportGraphQL && console.log('GraphQL running on ' + serverURL.split(port + mountPath).join(port) + '/graphql');
 }
