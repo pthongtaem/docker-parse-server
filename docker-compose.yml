@@ -1,6 +1,6 @@
 parse-server:
-  #build: .
-  image: yongjhih/parse-server
+  build: .
+  #image: yongjhih/parse-server
   ports:
     - "1337:1337"
   environment:
@@ -74,8 +74,8 @@ parse-server:
     - "./volumes/certs:/certs"
 
 parse-cloud-code:
-  #build: cloud/.
-  image: yongjhih/parse-cloud-code
+  build: cloud/.
+  #image: yongjhih/parse-cloud-code
   volumes:
     - /parse/cloud
   command: "ls /parse/cloud"

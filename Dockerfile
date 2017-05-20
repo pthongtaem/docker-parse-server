@@ -15,12 +15,14 @@ ADD jsconfig.json ${PARSE_HOME}/
 #ADD azuredeploy.json ${PARSE_HOME}/azuredeploy.json # azure
 
 ENV CLOUD_CODE_HOME ${PARSE_HOME}/cloud
-ADD cloud/*.js $CLOUD_CODE_HOME/
+ENV GRAPHQL_HOME ${PARSE_HOME}/graphql
+ADD lib/cloud/*.js $CLOUD_CODE_HOME/
+ADD lib/graphql/*.js $GRAPHQL_HOME/
 
 WORKDIR $PARSE_HOME
 RUN npm install
 
-ADD index.js ${PARSE_HOME}/
+ADD lib/index.js ${PARSE_HOME}/
 
 ## ENV
 #ENV APP_ID myAppId
